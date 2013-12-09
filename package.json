@@ -1,0 +1,24 @@
+{
+  "name": "ninja-heatmiser",
+  "version": "0.0.1",
+  "description": "NinjaBlocks Heatmiser Driver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/carlossg/ninja-thermostat-heatmiser.git"
+  },
+  "keywords": [
+    "heatmiser"
+  ],
+  "author": "Carlos Sanchez",
+  "license": "ASL",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "heatmiser": ">=0.0.4"
+  },
+  "engines": {
+  }
+}
