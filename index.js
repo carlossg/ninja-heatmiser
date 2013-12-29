@@ -19,10 +19,10 @@ function Driver(opts, app) {
   app.once('client::up',function(){
     self.save();
 
-    for (var name in opts.thermostats) {
-      var thermostat = opts.thermostats[name]
-      this.log.info("Registering thermostat %s at %s:%s", name, thermostat.host, thermostat.port);
-      self.poll(name);
+    for (var key in opts.thermostats) {
+      var thermostat = opts.thermostats[key]
+      this.log.info("Registering thermostat %s at %s:%s", key, thermostat.host, thermostat.port);
+      self.poll(key);
     }
   });
 
