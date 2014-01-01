@@ -17,7 +17,7 @@
   "license": "ASL",
   "readmeFilename": "README.md",
   "dependencies": {
-    "heatmiser": ">=0.0.4"
+    "heatmiser": ">=0.0.6"
   },
   "engines": {
   }

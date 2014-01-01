@@ -109,6 +109,30 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
 
   var self = this;
 
+  var writeThermostat = function(heatmiser, data) {
+    var success = function(deviceData) {
+      self.log.info('Heatmiser [%s] data written: %s', name, JSON.stringify(data));
+      heatmiser.removeListener('success', success);
+      heatmiser.removeListener('error', error);
+    }
+    var error = function(msg) {
+      self.log.error('Heatmiser [%s] Error writing data %s: %s', name, JSON.stringify(data), msg);
+      heatmiser.removeListener('success', success);
+      heatmiser.removeListener('error', error);
+    }
+
+    heatmiser.once('success', success);
+    heatmiser.once('error', error);
+
+    try {
+      heatmiser.write_device(data);
+    } catch (e) {
+      self.log.error('Heatmiser [%s] Error writing data %s: %s', name, JSON.stringify(data), e);
+      heatmiser.removeListener('success', success);
+      heatmiser.removeListener('error', error);
+    }
+  }
+
   // air temperature sensor
   function AirTemp() {
     this.writable = false;
@@ -162,49 +186,81 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
     }.bind(this));
 
     this.write = function(data) {
-
       if (typeof data == 'string') {
         try {
           data = parseFloat(data);
         } catch(e) {}
       }
-
       if (typeof data != 'number' || isNaN(data) ) {
         self.log.error('Heatmiser [%s] Tried to set target temperature with a non-number : %s', name, data);
         return;
       }
 
       self.log.debug('Heatmiser [%s] Setting target temperature to : %s', name, data);
-
-      var success = function(deviceData) {
-        self.log.info('Heatmiser [%s] Set target temperature to : %d', name, data);
-        heatmiser.removeListener('success', success);
-        heatmiser.removeListener('error', error);
-      }
-      var error = function(msg) {
-        self.log.error('Heatmiser [%s] Error setting target temperature to %d: %s', name, data, msg);
-        heatmiser.removeListener('success', success);
-        heatmiser.removeListener('error', error);
-      }
-
-      heatmiser.once('success', success);
-      heatmiser.once('error', error);
-
-      try {
-        heatmiser.write_device({
-          heating: {
-            target: data
-          }
-        });
-      } catch (e) {
-        self.log.error("Error setting target temperature: " + e);
-        heatmiser.removeListener('success', success);
-        heatmiser.removeListener('error', error);
-      }
+      writeThermostat(heatmiser, { heating: { target: data } });
     };
   }
   util.inherits(TargetTemp,stream);
   this.emit('register', new TargetTemp());
+
+
+  // temperature hold
+  function HoldTemp() {
+    this.writable = true;
+    this.readable = true;
+    this.V = 0;
+    this.D = 2000;
+    this.G = 'heatmiser' + id + 'hold';
+    this.name = name + ' Hold in minutes';
+
+    self.on(topic, function(deviceData) {
+      self.log.debug('Heatmiser [%s] Temperature Hold: %d', name, deviceData.temp_hold_minutes);
+      this.emit('data', deviceData.temp_hold_minutes);
+    }.bind(this));
+
+    this.write = function(data) {
+      if (typeof data == 'string') {
+        try {
+          data = parseInt(data);
+        } catch(e) {}
+      }
+      if (typeof data != 'number' || isNaN(data) ) {
+        self.log.error('Heatmiser [%s] Tried to set temperature hold with a non-number : %s', name, data);
+        return;
+      }
+
+      self.log.debug('Heatmiser [%s] Setting temperature hold to : %d', name, data);
+      writeThermostat(heatmiser, { heating: { hold: data } });
+    };
+  }
+  util.inherits(HoldTemp,stream);
+  this.emit('register', new HoldTemp());
+
+
+  // home/away status
+  function AwayMode() {
+    this.writable = true;
+    this.readable = true;
+    this.V = 0;
+    this.D = 244;
+    this.G = 'heatmiser' + id + 'away';
+    this.name = name + ' Away mode';
+
+    self.on(topic, function(deviceData) {
+      self.log.debug('Heatmiser [%s] Away mode: %s', name, deviceData.away_mode);
+      this.emit('data', deviceData.away_mode);
+    }.bind(this));
+
+    this.write = function(data) {
+      if (typeof data == 'string') {
+        data = data == 'true';
+      }
+      self.log.debug('Heatmiser [%s] Setting away mode to : %s', name, data);
+      writeThermostat(heatmiser, { away_mode: data });
+    };
+  }
+  util.inherits(AwayMode,stream);
+  this.emit('register', new AwayMode());
 
 };
 
