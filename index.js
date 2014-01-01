@@ -197,7 +197,7 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
           }
         });
       } catch (e) {
-        self.log.error("xx"+e);
+        self.log.error("Error setting target temperature: " + e);
         heatmiser.removeListener('success', success);
         heatmiser.removeListener('error', error);
       }
