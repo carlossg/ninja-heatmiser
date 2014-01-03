@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/carlossg/ninja-thermostat-heatmiser.git"
+    "url": "git://github.com/carlossg/ninja-heatmiser.git"
   },
   "keywords": [
     "heatmiser"

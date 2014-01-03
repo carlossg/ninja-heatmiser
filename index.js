@@ -48,14 +48,13 @@ Driver.prototype.config = function(rpc,cb) {
 
   switch (rpc.method) {
     case 'setCredentials':
-      this.log.debug("setCredentials");
 
       var name = rpc.params.name.length > 0 ? rpc.params.name : rpc.params.host + "_" + rpc.params.port;
       self.opts.thermostats[name] = {
         'host': rpc.params.host,
         'port': parseInt(rpc.params.port),
         'pin': parseInt(rpc.params.pin)
-      }
+      };
 
       self.save();
 
