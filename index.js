@@ -132,6 +132,24 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
     }
   }
 
+  // heating state
+  function Heating() {
+    this.writable = false;
+    this.readable = true;
+    this.V = 0;
+    this.D = 244;
+    this.G = 'heatmiser' + id + 'heating';
+    this.name = name + ' Heating';
+
+    self.on(topic, function(deviceData) {
+      self.log.debug('Heatmiser [%s] heating: %s', name, deviceData.heating_on);
+      this.emit('data', deviceData.heating_on);
+    }.bind(this));
+  }
+  util.inherits(Heating,stream);
+  this.emit('register', new Heating());
+
+
   // air temperature sensor
   function AirTemp() {
     this.writable = false;
