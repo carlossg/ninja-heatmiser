@@ -16,15 +16,21 @@ function Driver(opts, app) {
   opts.thermostats = opts.thermostats || {};
   opts.pollInterval = opts.pollInterval || 60000; // 1min default poll
 
+  this.timeoutIds = {};
+
   app.once('client::up',function(){
     self.save();
 
     var keys = Object.keys(opts.thermostats);
     for (var i=0; i<keys.length; i++) {
       var name = keys[i];
-      var thermostat = opts.thermostats[name]
-      this.log.info("Registering thermostat '%s' at %s:%s", name, thermostat.host, thermostat.port);
-      self.poll(name);
+      if (self.timeoutIds[name] == null) {
+        var thermostat = opts.thermostats[name]
+        this.log.info("Registering thermostat '%s' at %s:%s", name, thermostat.host, thermostat.port);
+        self.poll(name);
+      } else {
+        this.log.info("Thermostat '%s' at %s:%s already registered", name, thermostat.host, thermostat.port);
+      }
     }
   });
 
@@ -96,7 +102,7 @@ Driver.prototype.poll = function(name) {
   // first request
   self.fetchStatus(name, heatmiser);
   // Start continuous polling..
-  setInterval(function(){ self.fetchStatus(name, heatmiser) }, this.opts.pollInterval);
+  self.timeoutIds[name] = setInterval(function(){ self.fetchStatus(name, heatmiser) }, this.opts.pollInterval);
 };
 
 Driver.prototype.fetchStatus = function(name, heatmiser) {
