@@ -264,8 +264,15 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
     this.name = name + ' Away mode';
 
     self.on(topic, function(deviceData) {
-      self.log.debug('Heatmiser [%s] Away mode: %s', name, deviceData.away_mode);
-      this.emit('data', deviceData.away_mode);
+      var away;
+      if (deviceData.model.match(/(HW|TM1)$/)) {
+        // hotwater
+        away = deviceData.away_mode
+      } else {
+        away = (deviceData.run_mode == 'frost_protection')
+      }
+      self.log.debug('Heatmiser [%s] Away: %s', name, away);
+      this.emit('data', away);
     }.bind(this));
 
     this.write = function(data) {
@@ -273,7 +280,8 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
         data = data == 'true';
       }
       self.log.debug('Heatmiser [%s] Setting away mode to : %s', name, data);
-      writeThermostat(heatmiser, { away_mode: data });
+      // set both hotwater and heating on/off
+      writeThermostat(heatmiser, { away_mode: data, run_mode: 'frost_protection' });
     };
   }
   util.inherits(AwayMode,stream);
