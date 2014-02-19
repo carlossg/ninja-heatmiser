@@ -102,7 +102,7 @@ Driver.prototype.poll = function(name) {
   // first request
   self.fetchStatus(name, heatmiser);
   // Start continuous polling..
-  self.timeoutIds[name] = setInterval(function(){ self.fetchStatus(name, heatmiser) }, this.opts.pollInterval);
+  self.timeoutIds[name] = setInterval(function(){ self.fetchStatus(name, heatmiser); }, this.opts.pollInterval);
 };
 
 Driver.prototype.fetchStatus = function(name, heatmiser) {
