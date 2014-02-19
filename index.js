@@ -287,7 +287,7 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
       }
       self.log.debug('Heatmiser [%s] Setting away mode to : %s', name, data);
       // set both hotwater and heating on/off
-      writeThermostat(heatmiser, { away_mode: data, run_mode: 'frost_protection' });
+      writeThermostat(heatmiser, { away_mode: data, run_mode: (data ? 'frost_protection' : 'heating')});
     };
   }
   util.inherits(AwayMode,stream);
