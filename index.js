@@ -149,7 +149,7 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
 
     self.on(topic, function(deviceData) {
       self.log.debug('Heatmiser [%s] heating: %s', name, deviceData.heating_on);
-      this.emit('data', deviceData.heating_on);
+      this.emit('data', deviceData.heating_on.toString());
     }.bind(this));
   }
   util.inherits(Heating,stream);
@@ -278,7 +278,7 @@ Driver.prototype.createDevices = function(name, heatmiser, id, deviceData, topic
         away = (deviceData.run_mode == 'frost_protection')
       }
       self.log.debug('Heatmiser [%s] Away: %s', name, away);
-      this.emit('data', away);
+      this.emit('data', away.toString());
     }.bind(this));
 
     this.write = function(data) {
