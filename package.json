@@ -1,6 +1,6 @@
 {
   "name": "ninja-heatmiser",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "NinjaBlocks Heatmiser Driver",
   "main": "index.js",
   "scripts": {
@@ -11,13 +11,14 @@
     "url": "git://github.com/carlossg/ninja-heatmiser.git"
   },
   "keywords": [
+    "ninjablocks",
     "heatmiser"
   ],
   "author": "Carlos Sanchez",
   "license": "ASL",
   "readmeFilename": "README.md",
   "dependencies": {
-    "heatmiser": ">=1.0.0"
+    "heatmiser": ">=2.0.0"
   },
   "engines": {
   }
