@@ -1,11 +1,11 @@
 ninja-heatmiser
 ===============
 
-A [Ninja Blocks](http://ninjablocks.com) driver to talk to [Heatmiser](www.heatmiser.co.uk) thermostats
+A [Ninja Blocks](http://ninjablocks.com) driver to talk to [Heatmiser](www.heatmiser.co.uk) WiFi and Neo thermostats
 
 ###Overview
 
-Exports any number of Heatmiser Thermostats as NinjaBlocks devices. You can also avoid buying Heatmiser's MultiLink and save over £140.
+Exports any number of Heatmiser Thermostats as NinjaBlocks devices. If you are using several WiFi thermostats you can avoid buying Heatmiser's MultiLink and save over £140.
 
 Each Thermostat will appear as
 
@@ -24,10 +24,14 @@ Clone this repo into your drivers folder and install the dependencies. Restart t
     cd ninja-heatmiser
     npm install
     sudo service ninjablock restart
-    
+
 ###Configuration
 
-To add a thermostat go to the [web settings](https://a.ninja.is/you) - Blocks - Configure - Ninja Heatmiser Configure button. Enter a friendly name, host, port and pin of the thermostat. The devices for the sensors and actuators will show up in the Beta Dashboard and you can use the Rules editor to manage the thermostat.
+To add a WiFi thermostat or NeoHub device go to the [web settings](https://a.ninja.is/you) - Blocks - Configure - Ninja Heatmiser Configure button.
+Enter a friendly name, host, port (defaults to 8068 for WiFi, 4242 for NeoHub) and pin (only used for WiFi)
+of the WiFi thermostat or NeoHub device.
+The devices for the sensors and actuators will show up in the Beta Dashboard and you can use the Rules editor
+to manage the thermostat.
 
 The configuration is stored in
 
@@ -51,4 +55,3 @@ and can be easily edited
 ###TODO
 
 * A better dashboard widget to see all the data in one place and allow manual operation from it
-* Automatically sync time to the thermostat and avoid handling DST manually
